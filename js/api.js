@@ -2,7 +2,7 @@
 
 class API{
     async getCompaniesInformation(){
-        const response = await fetch('../listed_symbols.csv');
+        const response = await fetch('https://pkgstore.datahub.io/core/nasdaq-listings/nasdaq-listed-symbols_csv/data/595a1f263719c09a8a0b4a64f17112c6/nasdaq-listed-symbols_csv.csv');
         const data = await response.text();
         const companiesTable = data.split('\n').slice(1);
         const companies = [];
