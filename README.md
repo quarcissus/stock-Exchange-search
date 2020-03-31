@@ -1,2 +1,2 @@
 # stock-Exchange-search
-Visual historical stock dividend (in progress ....)
+Visual historical stock dividend 
