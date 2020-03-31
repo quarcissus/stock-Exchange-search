@@ -2,7 +2,8 @@
 
 class API{
     async getCompaniesInformation(){
-        const response = await fetch('https://github.com/quarcissus/stock-Exchange-search/blob/master/listed_symbols.csv');
+        const response = await fetch('./listed_symbols.csv');
+        
         const data = await response.text();
         const companiesTable = data.split('\n').slice(1);
         const companies = [];

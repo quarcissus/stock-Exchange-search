@@ -25,6 +25,7 @@ class INTERFACE{
             .then(companies =>{
                 const companiesSelected = companies.filter( data =>{
                     return data[1].toLowerCase().indexOf(companie) !== -1
+
                 });
                 return companiesSelected;
             });

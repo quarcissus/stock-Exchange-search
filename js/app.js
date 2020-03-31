@@ -3,35 +3,23 @@
     const searcher = document.querySelector('.selectpicker');
     const ui = new INTERFACE();
     const histApi = new FINANCIALAPI();
+    let companie = '';
+    let x_axis = [];
     loadListenners();
     function loadListenners(){
         document.addEventListener('DOMContentLoaded', options);
         $('.selectpicker').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-            getCompanieSelected(clickedIndex);
+            companie = getCompanieSelected(clickedIndex);
+            getHistorical(companie);
         });
+
+
         
     }
 
 
-
-    const chart = new Chart(ctx, {
-    // The type of chart we want to create
-        type: 'line',
-
-        // The data for our dataset
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [{
-                label: 'My First dataset',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 91, 132)',
-                data: [0, 10, 5, 2, 20, 30, 45]
-            }]
-        },
-
-        // Configuration options go here
-        options: {}
-    });
+    
+    
 
 
     // !Funcitions
@@ -43,5 +31,50 @@
     function getCompanieSelected(clickedIndex){
         const picker = document.querySelector('.selectpicker');
         const companieSelected = picker.options[clickedIndex].value;
-        histApi.getFinanceInformation(companieSelected);
+        return companieSelected;
+    }
+
+    function getHistorical( companie ){
+        let days = [];
+        let dailyVal = [];
+        histApi.getFinanceInformation(companie).
+            then(response =>{
+                const companieHistFinance = response.historical;
+                companieHistFinance.forEach((daily_info)=>{
+                    days.push(daily_info.date);
+                    dailyVal.push(daily_info.close);
+                });
+                printChart(days, dailyVal);
+                
+            });
+        
+    }
+
+    function printChart(days, dailyVal){
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'Stock exchange',
+                    borderColor: '#4F5F82',
+                    data: dailyVal
+                }]
+            },
+    
+            // Configuration options go here
+            options: {
+                scales:{
+                    yAxes: [
+                        {
+                            ticks:{
+                                callback: function(value, index, values){
+                                    return '$'+ value;
+                                }
+                            }
+                        },
+                    ]
+                }
+            }
+        });
     }
